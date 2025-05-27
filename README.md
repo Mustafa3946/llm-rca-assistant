@@ -1,54 +1,93 @@
-# LLM-RCA Assistant
+# RCA-LLM-Demo
 
-A lightweight demo of an LLM-powered Root Cause Analysis (RCA) system for analyzing cloud ETL failures. This project simulates log ingestion, processing, semantic search (RAG), and natural language root cause summaries using open-source tools and minimal cloud usage.
-
----
-
-## Features
-
-- Log ingestion & preprocessing (simulated)
-- ML Feature Store integration for failure metadata
-- Embedding generation via open-source models (e.g., `all-MiniLM`)
-- Vector store powered by FAISS (local, low cost)
-- Retrieval-Augmented Generation (RAG) using LangChain
-- RCA prompt templates for failure analysis
-- Streamlit UI for interacting with the assistant
+A lightweight, cost-free, local prototype of a Root Cause Analysis (RCA) assistant using LLMs and Retrieval-Augmented Generation (RAG). This demo avoids cloud costs by running locally with open-source tools.
 
 ---
 
-## Architecture
+## Architecture Overview
 
-```text
-+---------------------+
-|  Simulated Logs     |
-|  (CSV, JSON, etc)   |
-+----------+----------+
-           |
-     +-----v------+
-     | Preprocess |
-     | Clean logs |
-     +-----+------+
-           |
-+----------v-----------+
-| Feature Store (CSV)  |
-| Simulated metadata   |
-+----------+-----------+
-           |
-+----------v----------+        +------------------------+
-| Embedding Generator | -----> | Vector Store (FAISS)   |
-| (e.g. SentenceTransformers)  +-----------+------------+
-                                             |
-                                   +---------v---------+
-                                   | LangChain RAG     |
-                                   | (query+context)   |
-                                   +---------+---------+
-                                             |
-                                   +---------v---------+
-                                   | LLM (e.g. Claude, |
-                                   | GPT via API)     |
-                                   +---------+---------+
-                                             |
-                                   +---------v---------+
-                                   | Streamlit UI      |
-                                   | RCA Answer + Fix  |
-                                   +-------------------+
+```ascii
++-------------------------------------------------------------+
+|                        Data Sources                         |
+|  Local Logs | ETL Metadata | Simulated Failure Tickets      |
++------------------+------------------+------------------------+
+           |                |                  |
+           +----------- Local Preprocessing --------------+
+                            |
+                 +----------v-----------+
+                 |     Cleaned Logs     |
+                 |   (Saved to CSV)     |
+                 +----------+-----------+
+                            |
+          +----------------+-------------------+
+          |                                    |
++---------v----------+           +-------------v---------------+
+| ML Feature Store   |           | Embedding Generator (SBERT) |
+| (CSV file)         |           +-------------+---------------+
++--------------------+                         |
+                                   +----------v------------+
+                                   | Vector DB (FAISS)     |
+                                   +----------+------------+
+                                              |
+                                +-------------v--------------+
+                                |  RAG Engine (LangChain)     |
+                                | - Query Logs & Docs         |
+                                | - Construct Prompt          |
+                                +-------------+---------------+
+                                              |
+                                +-------------v---------------+
+                                | LLM (Local Model or API)     |
+                                | - Natural Language RCA       |
+                                +-------------+----------------+
+                                              |
+                              +---------------v----------------+
+                              |   Streamlit / FastAPI Frontend  |
+                              | - RCA Output + Recommendations  |
+                              +----------------+----------------+
+                                               |
+                         +---------------------v-------------------+
+                         |     Observability (Local logs only)     |
+                         +------------------------------------------+
+```
+
+---
+
+## How to Run
+
+### 1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Run preprocessing
+
+```bash
+python src/preprocess.py
+```
+
+This will create a CSV-based feature store from a sample log file.
+
+---
+
+## Folder Structure
+
+```
+├── data/
+│   ├── sample_logs.csv
+│   └── feature_store.csv
+├── src/
+│   └── preprocess.py
+├── README.md
+└── requirements.txt
+```
+
+---
+
+## Next Steps
+
+- Step 3: Generate embeddings (SBERT)
+- Step 4: Store in FAISS
+- Step 5: Implement RAG + UI
+
+---
