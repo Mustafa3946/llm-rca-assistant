@@ -15,47 +15,55 @@ A lightweight, cost-free, local prototype of a Root Cause Analysis (RCA) assista
 The RCA LLM Assistant uses a modular, local-first pipeline for root cause analysis. Raw ETL logs and metadata are ingested and preprocessed into structured features. These features are embedded into dense vectors and indexed using FAISS for fast similarity search. When a user submits a query, the system retrieves the most relevant logs, constructs a prompt, and uses a local LLM to generate a concise root cause analysis. The entire workflow runs locally, ensuring privacy and zero cloud costs.
 
 ```ascii
-+-------------------------------------------------------------+
-|                        Data Sources                         |
-|  Local Logs | ETL Metadata | Simulated Failure Tickets      |
-+------------------+------------------+------------------------+
-           |                |                  |
-           +----------- Local Preprocessing --------------+
-                            |
-                 +----------v-----------+
-                 |     Cleaned Logs     |
-                 |   (Saved to CSV)     |
-                 +----------+-----------+
-                            |
-          +----------------+-------------------+
-          |                                    |
-+---------v----------+           +-------------v---------------+
-| ML Feature Store   |           | Embedding Generator (SBERT) |
-| (CSV file)         |           +-------------+---------------+
-+--------------------+                         |
-                                   +----------v------------+
-                                   | Vector DB (FAISS)     |
-                                   +----------+------------+
-                                              |
-                                +-------------v--------------+
-                                |  RAG Engine (LangChain)     |
-                                | - Query Logs & Docs         |
-                                | - Construct Prompt          |
-                                +-------------+---------------+
-                                              |
-                                +-------------v---------------+
-                                | LLM (Local Model or API)     |
-                                | - Natural Language RCA       |
-                                +-------------+----------------+
-                                              |
-                              +---------------v----------------+
-                              |   Streamlit / FastAPI Frontend  |
-                              | - RCA Output + Recommendations  |
-                              +----------------+----------------+
-                                               |
-                         +---------------------v-------------------+
-                         |     Observability (Local logs only)     |
-                         +------------------------------------------+
++---------------------------------------------------------------+
+|                        Data Sources                           |
+|  - Local Logs   - ETL Metadata   - Simulated Failure Tickets  |
++----------------------+----------------------+-----------------+
+                       | 
+                       v
++---------------------------------------------------------------+
+|                   Local Preprocessing (Python)                |
+| - Cleans & normalizes logs                                    |
+| - Extracts structured features                                |
++----------------------+----------------------------------------+
+                       |
+                       v
++-------------------------------+         +--------------------+
+|      ML Feature Store         |         | Embedding Generator|
+|      (CSV file)               |         | (SBERT, SentenceT.)|
++-------------------------------+         +--------------------+
+                       |                          |
+                       +-----------+--------------+
+                                   |
+                                   v
+                        +----------------------+
+                        |   Vector DB (FAISS)  |
+                        +----------------------+
+                                   |
+                                   v
+                        +----------------------+
+                        |   RAG Engine         |
+                        |   (Prompt Builder,   |
+                        |    Retriever, etc.)  |
+                        +----------------------+
+                                   |
+                                   v
+                        +----------------------+
+                        |   LLM (Local Model   |
+                        |   or API)            |
+                        +----------------------+
+                                   |
+                                   v
+                        +----------------------+
+                        |   Frontend           |
+                        | (Streamlit/FastAPI)  |
+                        +----------------------+
+                                   |
+                                   v
+                        +----------------------+
+                        |   RCA Output &       |
+                        |   Recommendations    |
+                        +----------------------+
 ```
 
 ---
