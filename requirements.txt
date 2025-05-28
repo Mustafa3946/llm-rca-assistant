@@ -6,3 +6,4 @@ faiss-cpu                 # vector store
 pandas
 sentence-transformers     # for embeddings
 pytest
+fastapi[all]

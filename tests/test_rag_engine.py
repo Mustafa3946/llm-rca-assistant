@@ -7,8 +7,11 @@ from src.rag_engine import rca_pipeline
 def test_rca_pipeline():
     query = "network timeout error"
     response = rca_pipeline(query)
-    assert isinstance(response, str)
-    assert "Mocked LLM Response" in response
+    
+    assert isinstance(response, list)
+    assert len(response) > 0
+    assert isinstance(response[0], str)
+    assert "Mocked LLM Response" in response[0]
 
 if __name__ == "__main__":
     test_rca_pipeline()
