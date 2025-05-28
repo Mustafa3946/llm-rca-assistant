@@ -4,7 +4,7 @@ A lightweight, cost-free, local prototype of a Root Cause Analysis (RCA) assista
 
 ---
 
-![RCA LLM Assistant Streamlit Screenshot](assets/screenshot.JPG)
+<img src="assets/screenshot.JPG" alt="RCA LLM Assistant Streamlit Screenshot" width="500"/>
 
 ---
 
