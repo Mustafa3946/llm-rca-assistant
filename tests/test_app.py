@@ -1,3 +1,11 @@
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    message="numpy.core._multiarray_umath is deprecated and has been renamed to numpy._core._multiarray_umath",
+    category=DeprecationWarning,
+)
+
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

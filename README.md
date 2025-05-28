@@ -48,6 +48,7 @@ A lightweight, cost-free, local prototype of a Root Cause Analysis (RCA) assista
                          +---------------------v-------------------+
                          |     Observability (Local logs only)     |
                          +------------------------------------------+
+
 ```
 
 ---
@@ -68,6 +69,22 @@ python src/preprocess.py
 
 This will create a CSV-based feature store from a sample log file.
 
+### 3. Run unit tests
+
+```bash
+pytest tests/test_preprocess.py
+pytest tests/test_retriever.py
+pytest tests/test_rag_engine.py
+pytest tests/test_app.py
+```
+
+
+### 4. Run the Streamlit UI
+
+```bash
+streamlit run src/app_streamlit.py
+```
+
 ---
 
 ## Folder Structure
@@ -81,6 +98,7 @@ This will create a CSV-based feature store from a sample log file.
 │   └── feature_store.csv
 ├── src/
 │   ├── app.py
+│   ├── app_streamlit.py
 │   ├── embed.py
 │   ├── faiss_index.py
 │   ├── preprocess.py
@@ -95,10 +113,3 @@ This will create a CSV-based feature store from a sample log file.
 
 ---
 
-## Next Steps
-
-- Step 3: Generate embeddings (SBERT)
-- Step 4: Store in FAISS
-- Step 5: Implement RAG + UI
-
----
