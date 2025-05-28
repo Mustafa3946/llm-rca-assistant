@@ -113,6 +113,7 @@ streamlit run src/app_streamlit.py
 │   └── retriever.py
 ├── models/
 │   └── llama-2-7b.Q4_K_M.gguf
+    # (You must download this model file separately; it is not included in the repository.)
 ├── requirements.txt
 ├── README.md
 └── .gitignore
