@@ -11,8 +11,8 @@ def generate_prompt(query: str, retrieved_logs: list) -> str:
         f"User Query:\n{query}\n\nRelevant Logs:\n{logs_text}"
     )
 
-def rca_pipeline(query: str, k: int = 3) -> str:
+def rca_pipeline(query: str, k: int = 3) -> list[str]:
     retrieved_logs = get_top_k_logs(query, k=k)
     prompt = generate_prompt(query, retrieved_logs)
     response = query_llm(prompt)
-    return response
+    return [response]  

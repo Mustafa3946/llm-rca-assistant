@@ -1,6 +1,6 @@
 # RCA-LLM-Demo
 
-A lightweight, cost-free, local prototype of a Root Cause Analysis (RCA) assistant using LLMs and Retrieval-Augmented Generation (RAG). This demo avoids cloud costs by running locally with open-source tools.
+A lightweight, cost-free, local prototype of a Root Cause Analysis (RCA) assistant using LLMs and Retrieval-Augmented Generation (RAG). This demo runs entirely on your machine using open-source tools—no cloud costs or external dependencies.
 
 ---
 
@@ -52,21 +52,45 @@ A lightweight, cost-free, local prototype of a Root Cause Analysis (RCA) assista
 
 ---
 
-## How to Run
+## Getting Started
 
-### 1. Install dependencies
+### 1. Install Dependencies
+
+Make sure you have Python 3.8+ installed. Then, install the required packages:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Run preprocessing
+### 2. Preprocess Data
+
+Generate the feature store and embeddings from sample logs:
 
 ```bash
 python src/preprocess.py
 ```
 
-This will create a CSV-based feature store from a sample log file.
+This will create CSV-based feature and embedding files in the `outputs/` directory.
+
+### 3. Run Unit Tests (Optional)
+
+To verify your setup, run the included unit tests:
+
+```bash
+pytest tests/test_preprocess.py
+pytest tests/test_retriever.py
+pytest tests/test_rag_engine.py
+pytest tests/test_app.py
+```
+
+
+### 4. Launch the Streamlit UI
+
+Start the interactive RCA assistant interface:
+
+```bash
+streamlit run src/app_streamlit.py
+```
 
 ---
 
@@ -81,6 +105,7 @@ This will create a CSV-based feature store from a sample log file.
 │   └── feature_store.csv
 ├── src/
 │   ├── app.py
+│   ├── app_streamlit.py
 │   ├── embed.py
 │   ├── faiss_index.py
 │   ├── preprocess.py
@@ -95,10 +120,31 @@ This will create a CSV-based feature store from a sample log file.
 
 ---
 
-## Next Steps
+## Example Queries
 
-- Step 3: Generate embeddings (SBERT)
-- Step 4: Store in FAISS
-- Step 5: Implement RAG + UI
+Try entering any of these queries in the Streamlit interface to see how the RCA pipeline responds:
+
+- What caused the ETL job to timeout while connecting to the source database?
+- What is causing the data validation error with missing customer IDs?
+- Why can't the system write data to the S3 bucket?
+- Why did the ETL job fail to complete successfully?
 
 ---
+
+## Notes
+
+- All processing and inference run locally; no data leaves your machine.
+- The demo uses open-source models and libraries (e.g., SBERT, FAISS, LangChain, Streamlit).
+- For best results, ensure your system has sufficient RAM and CPU resources.
+
+---
+
+## License
+
+This project is licensed under the [Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).
+
+You may:
+- Share, remix, and adapt the work, as long as it's for **non-commercial purposes only**.
+
+You may not:
+- Use this work for **commercial purposes**, including resale or profit-driven uses, without explicit permission from the author.
