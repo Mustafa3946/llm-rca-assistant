@@ -1,6 +1,8 @@
 streamlit
-langchain
-faiss-cpu
-openai
+langchain>=0.1.16         # latest compatible core version
+langchain-community       # new home for LLMs, retrievers, etc.
+llama-cpp-python          # interface for running LLaMA models locally
+faiss-cpu                 # vector store
 pandas
-sentence-transformers
+sentence-transformers     # for embeddings
+pytest

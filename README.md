@@ -74,12 +74,23 @@ This will create a CSV-based feature store from a sample log file.
 
 ```
 ├── data/
-│   ├── sample_logs.csv
+│   └── sample_logs.json
+├── outputs/
+│   ├── embeddings.csv
+│   ├── faiss.index
 │   └── feature_store.csv
 ├── src/
-│   └── preprocess.py
+│   ├── app.py
+│   ├── embed.py
+│   ├── faiss_index.py
+│   ├── preprocess.py
+│   ├── rag_engine.py
+│   └── retriever.py
+├── models/
+│   └── llama-2-7b.Q4_K_M.gguf
+├── requirements.txt
 ├── README.md
-└── requirements.txt
+└── .gitignore
 ```
 
 ---
