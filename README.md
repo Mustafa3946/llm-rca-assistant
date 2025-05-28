@@ -4,6 +4,12 @@ A lightweight, cost-free, local prototype of a Root Cause Analysis (RCA) assista
 
 ---
 
+**Screenshot: Streamlit RCA LLM Assistant running locally in a web browser**
+
+<img src="assets/screenshot.JPG" alt="RCA LLM Assistant Streamlit Screenshot" width="500"/>
+
+---
+
 ## Architecture Overview
 
 ```ascii
