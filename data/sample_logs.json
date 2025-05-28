@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2025-05-25T10:00:00Z",
+    "job_id": "job_001",
+    "error_code": "ETL_FAILURE_503",
+    "message": "ETL job failed due to timeout while connecting to source DB"
+  },
+  {
+    "timestamp": "2025-05-25T11:00:00Z",
+    "job_id": "job_002",
+    "error_code": "DATA_VALIDATION_ERROR",
+    "message": "Null values found in mandatory field 'customer_id'"
+  },
+  {
+    "timestamp": "2025-05-25T12:00:00Z",
+    "job_id": "job_003",
+    "error_code": "WRITE_FAILURE",
+    "message": "Unable to write to S3 bucket due to AccessDenied error"
+  }
+]

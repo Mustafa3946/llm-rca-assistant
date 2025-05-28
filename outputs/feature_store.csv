@@ -1,0 +1,4 @@
+timestamp,error_code,error_type,cleaned_message
+2025-05-25 10:00:00+00:00,ETL_FAILURE_503,etl,etl job failed due to timeout while connecting to source db
+2025-05-25 11:00:00+00:00,DATA_VALIDATION_ERROR,null,null values found in mandatory field customerid
+2025-05-25 12:00:00+00:00,WRITE_FAILURE,unable,unable to write to s3 bucket due to accessdenied error
