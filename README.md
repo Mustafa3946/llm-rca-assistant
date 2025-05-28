@@ -12,6 +12,8 @@ A lightweight, cost-free, local prototype of a Root Cause Analysis (RCA) assista
 
 ## Architecture Overview
 
+The RCA LLM Assistant uses a modular, local-first pipeline for root cause analysis. Raw ETL logs and metadata are ingested and preprocessed into structured features. These features are embedded into dense vectors and indexed using FAISS for fast similarity search. When a user submits a query, the system retrieves the most relevant logs, constructs a prompt, and uses a local LLM to generate a concise root cause analysis. The entire workflow runs locally, ensuring privacy and zero cloud costs.
+
 ```ascii
 +-------------------------------------------------------------+
 |                        Data Sources                         |
