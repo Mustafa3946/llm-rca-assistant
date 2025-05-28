@@ -113,3 +113,11 @@ streamlit run src/app_streamlit.py
 
 ---
 
+## Sample Queries You Can Try
+You can enter any of the following queries into the Streamlit interface to see how the RCA pipeline responds:
+What caused the ETL job to timeout while connecting to the source database?
+What is causing the data validation error with missing customer IDs?
+Why can't the system write data to the S3 bucket?
+Why did the ETL job fail to complete successfully?
+
+---
