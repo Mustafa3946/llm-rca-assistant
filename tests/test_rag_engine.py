@@ -1,3 +1,13 @@
+# =============================================================================
+# test_rag_engine.py
+#
+# Purpose:
+#   This script contains unit tests for the core Retrieval-Augmented Generation (RAG) pipeline
+#   used in the RCA LLM Assistant. It verifies that the rca_pipeline function returns a valid
+#   response for a sample query and that the mocked LLM response is present in the output.
+#   The tests help ensure the RAG pipeline is functioning as expected for downstream tasks.
+# =============================================================================
+
 import warnings
 
 warnings.filterwarnings(
@@ -13,6 +23,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from src.rag_engine import rca_pipeline
 
 def test_rca_pipeline():
+    # Test that the RAG pipeline returns a valid response for a sample query.
     query = "network timeout error"
     response = rca_pipeline(query)
     
