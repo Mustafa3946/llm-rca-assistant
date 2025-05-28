@@ -70,6 +70,15 @@ The RCA LLM Assistant uses a modular, local-first pipeline for root cause analys
 
 ## Getting Started
 
+### 0. Clone the Repository
+
+First, clone this repository to your local machine:
+
+```bash
+git clone https://github.com/Mustafa3946/llm-rca-assistant.git
+cd llm-rca-assistant
+```
+
 ### 1. Install Dependencies
 
 Make sure you have Python 3.8+ installed. Then, install the required packages:
@@ -165,3 +174,37 @@ You may:
 
 You may not:
 - Use this work for **commercial purposes**, including resale or profit-driven uses, without explicit permission from the author.
+
+**Note:**  
+The `llama-2-7b.Q4_K_M.gguf` model file is **not included** in this repository.  
+You can download it from [Hugging Face](https://huggingface.co/) or the official Llama 2 release, and place it in the `models/` directory.
+
+![Python](https://img.shields.io/badge/python-3.8%2B-blue)
+![License](https://img.shields.io/badge/license-CC--BY--NC%204.0-lightgrey)
+
+---
+
+## How it Works
+
+1. **Data Ingestion & Preprocessing**  
+   Raw ETL logs and metadata are loaded and cleaned. Structured features are extracted and saved to a local feature store (CSV).
+
+2. **Embedding Generation**  
+   Cleaned log messages are converted into dense vector embeddings using a SentenceTransformer model (SBERT).
+
+3. **Indexing with FAISS**  
+   The embeddings are indexed using FAISS, enabling fast similarity search for relevant logs.
+
+4. **Retrieval-Augmented Generation (RAG) Pipeline**  
+   When a user submits a query, the system:
+   - Encodes the query as an embedding.
+   - Retrieves the most relevant logs from the FAISS index.
+   - Constructs a prompt combining the query and retrieved logs.
+
+5. **LLM Inference**  
+   The prompt is sent to a local LLM (such as Llama 2), which generates a concise root cause analysis.
+
+6. **User Interface**  
+   Results are displayed in a Streamlit web app, providing an interactive RCA assistant experience—all running locally on your machine.
+
+---
