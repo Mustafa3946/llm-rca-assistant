@@ -10,6 +10,20 @@ A lightweight, cost-free, local prototype of a Root Cause Analysis (RCA) assista
 
 ---
 
+## Table of Contents
+
+- [Architecture Overview](#architecture-overview)
+- [How it Works](#how-it-works)
+- [Getting Started](#getting-started)
+- [Folder Structure](#folder-structure)
+- [Example Queries](#example-queries)
+- [Example Output](#example-output)
+- [Notes](#notes)
+- [License](#license)
+- [Troubleshooting / FAQ](#troubleshooting--faq)
+
+---
+
 ## Architecture Overview
 
 The RCA LLM Assistant uses a modular, local-first pipeline for root cause analysis. Raw ETL logs and metadata are ingested and preprocessed into structured features. These features are embedded into dense vectors and indexed using FAISS for fast similarity search. When a user submits a query, the system retrieves the most relevant logs, constructs a prompt, and uses a local LLM to generate a concise root cause analysis. The entire workflow runs locally, ensuring privacy and zero cloud costs.
@@ -17,54 +31,88 @@ The RCA LLM Assistant uses a modular, local-first pipeline for root cause analys
 ```ascii
 +---------------------------------------------------------------+
 |                        Data Sources                           |
-|  - Local Logs   - ETL Metadata   - Simulated Failure Tickets  |
-+----------------------+----------------------+-----------------+
-                       | 
-                       v
+|  - Local Logs           - ETL Metadata                        |
+|  - Simulated Failure Tickets                                  |
+|  - (Optional: AWS CloudWatch Logs)                            |
++-------------------------------+-------------------------------+
+                                |
+                                v
 +---------------------------------------------------------------+
-|                   Local Preprocessing (Python)                |
-| - Cleans & normalizes logs                                    |
-| - Extracts structured features                                |
-+----------------------+----------------------------------------+
-                       |
-                       v
-+-------------------------------+         +--------------------+
-|      ML Feature Store         |         | Embedding Generator|
-|      (CSV file)               |         | (SBERT, SentenceT.)|
-+-------------------------------+         +--------------------+
-                       |                          |
-                       +-----------+--------------+
-                                   |
-                                   v
-                        +----------------------+
-                        |   Vector DB (FAISS)  |
-                        +----------------------+
-                                   |
-                                   v
-                        +----------------------+
-                        |   RAG Engine         |
-                        |   (Prompt Builder,   |
-                        |    Retriever, etc.)  |
-                        +----------------------+
-                                   |
-                                   v
-                        +----------------------+
-                        |   LLM (Local Model   |
-                        |   or API)            |
-                        +----------------------+
-                                   |
-                                   v
-                        +----------------------+
-                        |   Frontend           |
-                        | (Streamlit/FastAPI)  |
-                        +----------------------+
-                                   |
-                                   v
-                        +----------------------+
-                        |   RCA Output &       |
-                        |   Recommendations    |
-                        +----------------------+
+|                Local Preprocessing (Python)                   |
+|  - Cleans & normalizes logs                                   |
+|  - Extracts structured features                               |
+|  - (Optional: Preprocessing on AWS SageMaker)                 |
++-------------------------------+-------------------------------+
+                                |
+                                v
++-------------------------------+         +-----------------------------+
+|      ML Feature Store         |         |    Embedding Generator      |
+|   (CSV file, local)           |         | (SBERT, SentenceT.,         |
+|   or AWS OpenSearch           |         |  AWS Titan, Bedrock,        |
+|                               |         |  or SageMaker endpoint)     |
++-------------------------------+         +-----------------------------+
+                                |                     |
+                                +----------+----------+
+                                           |
+                                           v
+                          +-------------------------------+
+                          |   Vector DB (FAISS, local)    |
+                          |   or AWS OpenSearch           |
+                          +-------------------------------+
+                                           |
+                                           v
+                          +-------------------------------+
+                          |        RAG Engine             |
+                          | (Prompt Builder, Retriever,   |
+                          |  LangChain, etc.)             |
+                          +-------------------------------+
+                                           |
+                                           v
+                          +-------------------------------+
+                          |   LLM (Local Model,           |
+                          |   AWS Bedrock, Titan,         |
+                          |   or SageMaker endpoint)      |
+                          +-------------------------------+
+                                           |
+                                           v
+                          +-------------------------------+
+                          |          Frontend             |
+                          |   (Streamlit/FastAPI,         |
+                          |    or AWS-hosted UI)          |
+                          +-------------------------------+
+                                           |
+                                           v
+                          +-------------------------------+
+                          |   RCA Output &                |
+                          |   Recommendations             |
+                          +-------------------------------+
 ```
+
+---
+
+
+## How it Works
+
+1. **Data Ingestion & Preprocessing**  
+   Raw ETL logs and metadata are loaded and cleaned. Structured features are extracted and saved to a local feature store (CSV).
+
+2. **Embedding Generation**  
+   Cleaned log messages are converted into dense vector embeddings using a SentenceTransformer model (SBERT).
+
+3. **Indexing with FAISS**  
+   The embeddings are indexed using FAISS, enabling fast similarity search for relevant logs.
+
+4. **Retrieval-Augmented Generation (RAG) Pipeline**  
+   When a user submits a query, the system:
+   - Encodes the query as an embedding.
+   - Retrieves the most relevant logs from the FAISS index.
+   - Constructs a prompt combining the query and retrieved logs.
+
+5. **LLM Inference**  
+   The prompt is sent to a local LLM (such as Llama 2), which generates a concise root cause analysis.
+
+6. **User Interface**  
+   Results are displayed in a Streamlit web app, providing an interactive RCA assistant experience—all running locally on your machine.
 
 ---
 
@@ -157,6 +205,16 @@ Try entering any of these queries in the Streamlit interface to see how the RCA 
 
 ---
 
+## Example Output
+
+**Query:**  
+What caused the ETL job to timeout while connecting to the source database?
+
+**Sample RCA Output:**  
+Based on the logs, the most likely root cause is: network instability or firewall blocking outbound connections.
+
+---
+
 ## Notes
 
 - All processing and inference run locally; no data leaves your machine.
@@ -184,27 +242,10 @@ You can download it from [Hugging Face](https://huggingface.co/) or the official
 
 ---
 
-## How it Works
+## Troubleshooting / FAQ
 
-1. **Data Ingestion & Preprocessing**  
-   Raw ETL logs and metadata are loaded and cleaned. Structured features are extracted and saved to a local feature store (CSV).
+- **Q:** I get a "model file not found" error.  
+  **A:** Download `llama-2-7b.Q4_K_M.gguf` and place it in the `models/` directory.
 
-2. **Embedding Generation**  
-   Cleaned log messages are converted into dense vector embeddings using a SentenceTransformer model (SBERT).
-
-3. **Indexing with FAISS**  
-   The embeddings are indexed using FAISS, enabling fast similarity search for relevant logs.
-
-4. **Retrieval-Augmented Generation (RAG) Pipeline**  
-   When a user submits a query, the system:
-   - Encodes the query as an embedding.
-   - Retrieves the most relevant logs from the FAISS index.
-   - Constructs a prompt combining the query and retrieved logs.
-
-5. **LLM Inference**  
-   The prompt is sent to a local LLM (such as Llama 2), which generates a concise root cause analysis.
-
-6. **User Interface**  
-   Results are displayed in a Streamlit web app, providing an interactive RCA assistant experience—all running locally on your machine.
-
----
+- **Q:** Streamlit says the port is in use.  
+  **A:** Try `streamlit run src/app_streamlit.py --server.port 8502` to use a different port.
